@@ -17,11 +17,10 @@ demux_thread通过AVFormatContext找到对应的视频流，并调用了stream_c
 新增函数open_input，函数内容：提取demux_thread前部分初始化工作到open_input中，并将stream_component_open的调用转移到open_input函数中；
 
 
-5、videostate增加了duration成员并在open_input赋值，在video_display增加了打印视频播放进度语句，方便查看视频播放进度
+4、videostate增加了duration成员并在open_input赋值，在video_display增加了打印视频播放进度语句，方便查看视频播放进度
 
-6、audio_callback中的pts似乎没有作用。删去
 
-7、decode_video_thread中：
+5、decode_video_thread中：
 
  if((pts = av_frame_get_best_effort_timestamp(pFrame)) != AV_NOPTS_VALUE) {
     } else {
@@ -30,7 +29,7 @@ demux_thread通过AVFormatContext找到对应的视频流，并调用了stream_c
 改为：if((pts = av_frame_get_best_effort_timestamp(pFrame)) == AV_NOPTS_VALUE) 
       		pts = 0;
 
-8、原思路：当前音频播放时间 = 当前packet的pts + 当前packet解码出的音频帧frame播放时长 - 实际缓冲区未播放的frame数据播放时长
+6、原思路：当前音频播放时间 = 当前packet的pts + 当前packet解码出的音频帧frame播放时长 - 实际缓冲区未播放的frame数据播放时长
    修改为：当前音频播放时间 = 当前packet的pts + 实际缓冲区已经播放的数据时长
    代码修改：get_audio_clock中，使用pts2替换pts；audio_decode_frame中audio_clock不再加解码帧frame的播放时长
 
