@@ -12,3 +12,4 @@ libswresample
 libavutil
 
 编译：gcc player.c -o player `pkg-config --cflags --libs sdl2 libavcodec libavformat libavutil libswresample libswscale`
+运行：./player 多媒体路径/XXX.mp4
