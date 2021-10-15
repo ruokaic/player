@@ -243,7 +243,7 @@ double get_master_clock(VideoState *is) {
 /* Add or subtract samples to get a better sync, return new
    audio buffer size */
 
-//int synchronize_audio(VideoState *is, short *samples,int samples_size, double pts)    //pts根本没用到
+//int synchronize_audio(VideoState *is, short *samples,int samples_size, double pts) 
 int synchronize_audio(VideoState *is, short *samples,int samples_size)  //音频同步到视频才用
 {
   int n;
@@ -424,7 +424,7 @@ void audio_callback(void *userdata, Uint8 *stream, int len)
     }
 }
 
-// 2、发出FF_REFRESH_EVENT来调用video_refresh_timer
+//发出FF_REFRESH_EVENT来调用video_refresh_timer
 static Uint32 sdl_refresh_timer_cb(Uint32 interval, void *opaque)
 {
   //fprintf(stderr,"timer pid:%ld\n",pthread_self());
@@ -436,13 +436,13 @@ static Uint32 sdl_refresh_timer_cb(Uint32 interval, void *opaque)
 }
 
 /* schedule a video refresh in 'delay' ms */
-//1、XXXms后调用一次（仅一次）回调函数sdl_refresh_timer_cb，调了帧数会导致音视频不同步？
+//XXXms后调用一次（仅一次）回调函数sdl_refresh_timer_cb
 static void schedule_refresh(VideoState *is, int delay)
 {
   SDL_AddTimer(delay, sdl_refresh_timer_cb, is);
 }
 
-//4、把picture传给SDL进行渲染，实现*******播放视频
+//把picture传给SDL进行渲染，实现播放视频
 void video_display(VideoState *is)
 {
   fprintf(stderr,"%5.2f%%\n",100*(is->video_clock/(global_video_state->duration/1000000)));
@@ -490,7 +490,7 @@ void video_display(VideoState *is)
   }
 }
 
-//3、必定反复调用schedule_refresh来实现视频帧刷新，同时通过delay来实现音视频同步；若picture队列不为空，则调用video_display
+//反复调用schedule_refresh来实现视频帧刷新，同时通过delay来实现音视频同步；若picture队列不为空，则调用video_display
 void video_refresh_timer(void *userdata)
 {
 
@@ -574,7 +574,7 @@ void video_refresh_timer(void *userdata)
         }
     }
     else {
-        schedule_refresh(is, 100);  //类似demux_thread结尾
+        schedule_refresh(is, 100); 
     }
 }
 
@@ -612,7 +612,7 @@ void alloc_picture(void *userdata)
 
 }
 
-//*4、将解码视频帧AVFrame格式转换后存入picture数组
+//将解码视频帧AVFrame格式转换后存入picture数组
 int queue_picture(VideoState *is, AVFrame *pFrame, double pts)
 {
 
@@ -688,7 +688,7 @@ double synchronize_video(VideoState *is, AVFrame *src_frame, double pts)
   return pts;
 }
 
-//*3、队列取出视频包调用avcodec_decode_video2解码
+//队列取出视频包调用avcodec_decode_video2解码
 int decode_video_thread(void *arg)
 {
   VideoState *is = (VideoState *)arg;
@@ -728,7 +728,7 @@ int decode_video_thread(void *arg)
   return 0;
 }
 
-//*2、根据编码器上下文判断是音频还是视频，初始化音频包或视频包的队列，打开编码器、声卡等并初始化参数，重采样初始化，创建解码线程
+//根据编码器上下文判断是音频还是视频，初始化音频包或视频包的队列，打开编码器、声卡等并初始化参数，重采样初始化，创建解码线程
 int stream_component_open(VideoState *is, int stream_index)
 {
   AVFormatContext *pFormatCtx = is->pFormatCtx;
@@ -851,7 +851,7 @@ int stream_component_open(VideoState *is, int stream_index)
   }
 }
 
-//*1、解复用线程，获取音视频信息、编解码器上下文，调用av_read_frame读取文件内容到packet，经过*2之后，通过packet->stream_index将音频和视频分别入队不同的音频包队列和视频包队列
+//解复用线程，获取音视频信息、编解码器上下文，调用av_read_frame读取文件，将音频和视频分别入队不同的音频包队列和视频包队列
 int demux_thread(void *arg)
 {
 
@@ -879,7 +879,7 @@ int demux_thread(void *arg)
       }
     }
     // Is this a packet from the video stream?
-    if(packet->stream_index == is->videoStream) {    //stream_index从哪来的，为什么可以和videosteam对应？videoStream本来就是从streams[i]获得的，ffmpeg内部stream_index和i的值一致
+    if(packet->stream_index == is->videoStream) {   
       packet_queue_put(&is->videoq, packet);
     } else if(packet->stream_index == is->audioStream) {
       packet_queue_put(&is->audioq, packet);
@@ -983,7 +983,7 @@ int main(void)
   //char path[] = "test3.mp3";
   //char path[] = "test4.ts";
 
-  av_strlcpy(is->filename, path, sizeof (is->filename));    //ffmpeg自带strcpy，#include"libavutil/avstring.h"
+  av_strlcpy(is->filename, path, sizeof (is->filename)); 
 
   //open file
   int ret = open_input(is);
