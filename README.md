@@ -1,8 +1,8 @@
 # player
-国外友人Stephen Dranger基于ffplay核心架构，编写的播放器，作为ffmpeg入门学习的教程，需要一定的音视频基础和C语言基础。
+国外友人Stephen Dranger基于ffplay核心架构编写的播放器，用来作为ffmpeg入门学习的教程，需要一定的音视频基础和C语言基础。
 虽然是多年前出的教程，有一些老旧的接口目前已经废弃，但仍然是用来学习ffmpeg的一个非常不错的项目。
 
-目前已经学到第五节（Tutorial 05），我在读完源码后，加上了一些注释，梳理了一张函数调用关系图，替换了一些旧接口，在逻辑思路和架构方面加入了自己的想法，主要变动详见更新日志。
+本人目前只学到Tutorial 5，在读完源码后，加上了一些注释，梳理了一张函数调用关系图，替换了一些旧接口，在逻辑思路和架构方面加入了自己的想法，主要变动详见更新日志。
 教程：http://www.dranger.com/ffmpeg/ffmpeg.html
 github源码：https://github.com/mpenkov/ffmpeg-tutorial
 
