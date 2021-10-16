@@ -2,22 +2,23 @@
       
 2、改为SDL2库后，播放器无法正常缩放
 解决：
-在video_display函数，也就是每帧播放前，通过SDL_GetWindowSize获取当前窗口大小，得到w,h赋值给rect
+在video_display函数，也就是每帧播放前，通过SDL_GetWindowSize获取当前窗口大小，得到w,h赋值给rect，让rect来约束SDL渲染范围
 
 3、由于视频的分辨率是在SDL_CreateWindow之后才获取，导致SDL_CreateWindow窗口大小只能预设固定值，若视频分辨率与预设值不同，则播放时会看到出初始窗口一闪而过
 解决：
 要解决这个问题，只能在创建窗口之前，从AVCodecContext找到视频宽和高，于是干脆新建函数，将初始化工作集中于此，并在得到文件路径之后，窗口创建之前调用该函数；
+这样做，会把视频解码线程和音频解码线程的调用放在了解复用线程之前，解码线程会阻塞等待解复用线程，并不影响程序运行；
 修改前：
 demux_thread通过AVFormatContext找到对应的视频流，并调用了stream_component_open，该函数使用视频流得到了AVCodecContext；
 修改后：
 新增函数open_input，函数内容：提取demux_thread前部分初始化工作到open_input中，并将stream_component_open的调用转移到open_input函数中；
 
+4、为了方便查看视频播放进度，在videostate增加了duration成员储存视频总时长，在open_input函数初始化解码器后，从解码器上下文可以获取到视频播放总时长。
+  在video_display函数内打印视频播放进度：100*（当前播放时长/总时长）。
 
-4、videostate增加了duration成员并在open_input赋值，在video_display增加了打印视频播放进度语句，方便查看视频播放进度
-
-
-5、原思路：当前音频播放时间 = 当前packet的pts + 当前packet解码出的音频帧frame播放时长 - 实际缓冲区未播放的frame数据播放时长
-   修改为：当前音频播放时间 = 当前packet的pts + 实际缓冲区已经播放的数据时长
-   代码修改：get_audio_clock中，使用pts2替换pts；audio_decode_frame中audio_clock不再加解码帧frame的播放时长
+5、发现源代码中获取当前音频播放时间部分的代码比较复杂，于是做了简化
+      原代码：当前音频播放时间 = 当前packet的pts + 当前packet解码出的音频帧frame播放时长 - 实际缓冲区未播放的frame数据播放时长
+      修改为：当前音频播放时间 = 当前packet的pts + 实际缓冲区已经播放的数据时长
+      主要修改两处函数的代码：get_audio_clock中，使用pts2替换pts；audio_decode_frame中audio_clock不再加解码帧frame的播放时长
 
 
