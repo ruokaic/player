@@ -605,7 +605,7 @@ int queue_picture(VideoState *is, AVFrame *pFrame, double pts)
   //一开始picture队列中的AVPicture没有初始化才会触发（分辨率大小发生变化也需要重新初始化，这个条件没有触发过
   if(!vp->bmp ||vp->width != is->video_ctx->width ||vp->height != is->video_ctx->height)
   {
-    vp->allocated = 0;  //这个参数不起作用
+    vp->allocated = 0;  //这个参数暂时不用
     alloc_picture(is);  //只在程序开始运行时调用一次，为AVPicture*bmp分配空间，初始化
     if(is->quit) {
       return -1;
