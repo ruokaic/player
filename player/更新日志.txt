@@ -1,10 +1,6 @@
-
-1、av_strlcpy无法识别
-解决：
-添加头文件#include "libavutil/avutil.h"
-#include"libavutil/avstring.h"
+1、将SDL库替换为SDL2库，由于ffmpeg旧接口仍能使用，于是只在对应位置下注释了新接口
       
-2、播放器无法正常缩放
+2、改为SDL2库后，播放器无法正常缩放
 解决：
 在video_display函数，也就是每帧播放前，通过SDL_GetWindowSize获取当前窗口大小，得到w,h赋值给rect
 
