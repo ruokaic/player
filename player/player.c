@@ -667,7 +667,7 @@ int decode_video_thread(void *arg)
       pts = 0;
 
       avcodec_decode_video2(is->video_ctx, pFrame, &frameFinished, packet);
-
+      //新的解码接口：avcodec_send_packet 和 avcodec_receive_frame
       /*从解码帧获取时间戳，会有极个别解码出的frame时间戳不是有效值，则将其时间戳设为0
        * av_frame_get_best_effort_timestamp会做逻辑处理，比frame->pts更精准*/
       if((pts = av_frame_get_best_effort_timestamp(pFrame)) == AV_NOPTS_VALUE)
