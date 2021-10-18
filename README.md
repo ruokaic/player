@@ -6,7 +6,7 @@
 教程：http://www.dranger.com/ffmpeg/ffmpeg.html  
 github源码：https://github.com/mpenkov/ffmpeg-tutorial  
 
-运行需以下库：  
+**运行需以下库**  
 SDL2
 以及
 ffmpeg下的：
@@ -16,6 +16,6 @@ libswscale
 libswresample
 libavutil  
 
-编译：gcc player.c -o player `pkg-config --cflags --libs sdl2 libavcodec libavformat libavutil libswresample libswscale` 亦可执行make来编译。  
-运行：./player 多媒体路径/XXX.mp4  
+**编译**：gcc player.c -o player `pkg-config --cflags --libs sdl2 libavcodec libavformat libavutil libswresample libswscale` 亦可执行make来编译。  
+**运行**：./player 多媒体路径/XXX.mp4  
 ![Image text](https://raw.githubusercontent.com/ruokaic/player/main/%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C.png)
