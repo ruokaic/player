@@ -21,4 +21,4 @@ demux_thread通过AVFormatContext找到对应的视频流，并调用了stream_c
       修改为：当前音频播放时间 = 当前packet的pts + 实际缓冲区已经播放的数据时长
       主要修改两处函数的代码：get_audio_clock中，使用pts2替换pts；audio_decode_frame中audio_clock不再加解码帧frame的播放时长
 
-
+6、增加了URL播放功能，能拉取播放网络流，但如果网络流只有单路音频或视频，则会导致找不到另一流的解码器而异常退出，有待进一步完善
